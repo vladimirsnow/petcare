@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админ-панель — PetCare</title>
+  <meta name="description" content="Административная панель груминг-салона PetCare">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a78bfa'%3E%3Cpath d='M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    if (localStorage.getItem('petcare_auth_cached')) {
+      document.documentElement.classList.add('user-logged-in');
+    } else {
+      document.documentElement.classList.add('user-logged-out');
+    }
+  </script>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z"/>
+        </svg>
+      </div>
+      <span>PetCare Admin</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">← На сайт</a>
+    </div>
+    <div class="nav-actions">
+      <div data-auth="user" style="display:none">
+        <button class="nav-user-btn"><div class="nav-avatar" data-user-avatar>A</div><span data-user-name>Admin</span></button>
+      </div>
+      <button data-logout class="btn btn-outline btn-sm" data-auth="user" style="display:none">Выйти</button>
+    </div>
+  </div>
+</nav>
+
+<section class="admin-section" style="padding: calc(var(--nav-h) + 40px) 0 60px">
+  <div class="container">
+    <!-- Access denied / Dedicated Admin Login Form -->
+    <div id="access-denied" class="hidden" style="text-align:center;padding:40px 20px;max-width:440px;margin:0 auto">
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-purple-light)"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h2 style="margin-bottom:8px">Вход в панель управления</h2>
+      <p style="color:var(--text-secondary);margin-bottom:24px;font-size:.9rem">Доступ только для администраторов по email и паролю</p>
+      
+      <form id="admin-login-form" style="text-align:left;background:var(--bg-glass-strong);border:1px solid var(--border);border-radius:var(--radius-md);padding:24px;box-shadow:var(--shadow-lg)">
+        <div class="form-group">
+          <label class="form-label" for="adm-email">Email администратора</label>
+          <input class="form-control" type="email" id="adm-email" placeholder="admin@gmail.com" required autocomplete="email" value="admin@gmail.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="adm-password">Пароль</label>
+          <div class="input-icon-wrap">
+            <input class="form-control" type="password" id="adm-password" placeholder="••••" required autocomplete="current-password" value="1234">
+            <button type="button" class="input-icon-right toggle-pass" data-for="adm-password" aria-label="Показать пароль">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="adm-submit-btn" style="width:100%;margin-top:12px">Войти в админ-панель</button>
+      </form>
+      <div style="margin-top:20px">
+        <a href="index.html" class="btn btn-secondary btn-sm">← Вернуться на сайт</a>
+      </div>
+    </div>
+
+    <!-- Admin Main -->
+    <div id="admin-main" class="hidden">
+      <div class="admin-grid">
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+          <div class="admin-sidebar-title">Управление</div>
+          <div class="admin-nav-item active" data-panel="dashboard">Дашборд</div>
+          <div class="admin-nav-item" data-panel="bookings">Записи</div>
+          <div class="admin-nav-item" data-panel="services">Услуги</div>
+          <div class="admin-nav-item" data-panel="specialists">Специалисты</div>
+          <div class="admin-nav-item" data-panel="users">Пользователи</div>
+          <div class="admin-nav-item" data-panel="reviews">Отзывы</div>
+          <div class="admin-nav-item" data-panel="settings">Настройки салона</div>
+        </div>
+
+        <!-- Content -->
+        <div class="admin-content">
+
+          <!-- Dashboard -->
+          <div class="admin-panel active" id="panel-dashboard">
+            <div class="admin-header">
+              <div class="admin-title">Дашборд</div>
+            </div>
+            <div class="stats-grid" id="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon icon-purple">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div class="stat-value" id="stat-bookings">—</div>
+                <div class="stat-label">Всего записей</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon icon-green">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="stat-value" id="stat-completed">—</div>
+                <div class="stat-label">Завершено</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon icon-cyan">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+                </div>
+                <div class="stat-value" id="stat-services">—</div>
+                <div class="stat-label">Активных услуг</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon icon-pink">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div class="stat-value" id="stat-users">—</div>
+                <div class="stat-label">Пользователей</div>
+              </div>
+            </div>
+            <h3 style="margin-bottom:16px;font-size:1rem">Последние записи</h3>
+            <div class="table-wrap">
+              <table class="data-table" id="recent-bookings-table">
+                <thead><tr><th>Клиент</th><th>Питомец</th><th>Услуга</th><th>Дата</th><th>Статус</th></tr></thead>
+                <tbody id="recent-bookings-body"><tr><td colspan="5" style="text-align:center;padding:20px"><div class="spinner" style="margin:0 auto"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Bookings -->
+          <div class="admin-panel" id="panel-bookings">
+            <div class="admin-header">
+              <div class="admin-title">Управление записями</div>
+              <select class="sort-select" id="bookings-filter-status" style="min-width:140px">
+                <option value="all">Все статусы</option>
+                <option value="pending">Ожидание</option>
+                <option value="confirmed">Подтверждено</option>
+                <option value="completed">Завершено</option>
+                <option value="cancelled">Отменено</option>
+              </select>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Клиент</th><th>Питомец</th><th>Услуга</th><th>Специалист</th><th>Дата/Время</th><th>Статус</th><th>Действия</th></tr></thead>
+                <tbody id="bookings-table-body"><tr><td colspan="7" style="text-align:center;padding:20px"><div class="spinner" style="margin:0 auto"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Services -->
+          <div class="admin-panel" id="panel-services">
+            <div class="admin-header">
+              <div class="admin-title">Услуги</div>
+              <button class="btn btn-primary btn-sm" id="add-service-btn">+ Добавить услугу</button>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Название</th><th>Категория</th><th>Цена</th><th>Длительность</th><th>Рейтинг</th><th>Статус</th><th>Действия</th></tr></thead>
+                <tbody id="services-table-body"><tr><td colspan="7" style="text-align:center;padding:20px"><div class="spinner" style="margin:0 auto"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Specialists -->
+          <div class="admin-panel" id="panel-specialists">
+            <div class="admin-header">
+              <div class="admin-title">Специалисты</div>
+              <button class="btn btn-primary btn-sm" id="add-specialist-btn">+ Добавить специалиста</button>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Имя</th><th>Специализации</th><th>Рейтинг</th><th>Отзывов</th><th>Статус</th><th>Действия</th></tr></thead>
+                <tbody id="specialists-table-body"><tr><td colspan="6" style="text-align:center;padding:20px"><div class="spinner" style="margin:0 auto"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Users -->
+          <div class="admin-panel" id="panel-users">
+            <div class="admin-header">
+              <div class="admin-title">Пользователи</div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Имя</th><th>Email</th><th>Роль</th><th>Дата регистрации</th><th>Действия</th></tr></thead>
+                <tbody id="users-table-body"><tr><td colspan="5" style="text-align:center;padding:20px"><div class="spinner" style="margin:0 auto"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Reviews -->
+          <div class="admin-panel" id="panel-reviews">
+            <div class="admin-header"><div class="admin-title">Отзывы</div></div>
+            <div id="reviews-admin-list">
+              <div class="spinner" style="margin:20px auto;display:block;width:fit-content"></div>
+            </div>
+          </div>
+
+          <!-- Salon Settings -->
+          <div class="admin-panel" id="panel-settings">
+            <div class="admin-header">
+              <div class="admin-title">Настройки салона</div>
+            </div>
+            <div style="max-width:640px;background:var(--bg-glass-strong);border:1px solid var(--border);border-radius:var(--radius-md);padding:28px">
+              <p style="font-size:.88rem;color:var(--text-secondary);margin-bottom:24px">
+                Данные параметры мгновенно отображаются на главной странице и в футере сайта.
+              </p>
+              <form id="salon-settings-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Довольных питомцев (число)</label>
+                    <input class="form-control" type="number" id="set-happy-pets" required min="0" value="2850">
+                  </div>
+                    <div class="form-group">
+                      <label class="form-label">Средний рейтинг</label>
+                      <input class="form-control" type="number" step="any" min="1" max="5" id="set-avg-rating" required value="4.9">
+                    </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Количество специалистов</label>
+                    <input class="form-control" type="number" id="set-spec-count" required min="1" value="8">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Телефон салона</label>
+                    <input class="form-control" id="set-phone" required value="+7 (777) 123-45-67">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Email салона</label>
+                    <input class="form-control" type="email" id="set-email" required value="info@petcare.kz">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Часы работы</label>
+                    <input class="form-control" id="set-hours" required value="09:00 – 20:00 ежедневно">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Адрес салона</label>
+                  <input class="form-control" id="set-address" required value="г. Алматы, пр. Достык, 42">
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top:8px">Сохранить настройки</button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Service Modal -->
+<div class="modal-overlay" id="service-form-modal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h2 class="modal-title" id="sfm-title">Услуга</h2>
+      <button class="modal-close">✕</button>
+    </div>
+    <form id="service-form">
+      <input type="hidden" id="sf-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Название</label>
+          <input class="form-control" id="sf-name" required placeholder="Комплексный груминг">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Категория</label>
+          <select class="form-control" id="sf-category">
+            <option>Стрижка</option><option>Мытьё</option><option>Маникюр</option>
+            <option>Уши</option><option>Зубки</option><option>Комплекс</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Описание</label>
+        <textarea class="form-control" id="sf-desc" rows="3" placeholder="Описание услуги..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Цена (₸)</label>
+          <input class="form-control" type="number" id="sf-price" required min="0" placeholder="10000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Длительность (мин)</label>
+          <input class="form-control" type="number" id="sf-duration" required min="15" placeholder="60">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Теги (через запятую)</label>
+        <input class="form-control" id="sf-tags" placeholder="собаки, кошки, стрижка">
+      </div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="sf-active" checked style="width:16px;height:16px;accent-color:var(--color-purple)">
+          <span class="form-label" style="margin:0">Активна</span>
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Сохранить</button>
+    </form>
+  </div>
+</div>
+
+<!-- Specialist Modal -->
+<div class="modal-overlay" id="specialist-form-modal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h2 class="modal-title" id="spfm-title">Специалист</h2>
+      <button class="modal-close">✕</button>
+    </div>
+    <form id="specialist-form">
+      <input type="hidden" id="spf-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Имя</label>
+          <input class="form-control" id="spf-name" required placeholder="Мария Петрова">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Специализации (через запятую)</label>
+          <input class="form-control" id="spf-spec" placeholder="Стрижка, Мытьё, Маникюр">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">URL фотографии</label>
+        <input class="form-control" id="spf-photo" placeholder="https://images.unsplash.com/photo-...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Биография</label>
+        <textarea class="form-control" id="spf-bio" rows="3" placeholder="Опыт работы, квалификация..."></textarea>
+      </div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="spf-active" checked style="width:16px;height:16px;accent-color:var(--color-purple)">
+          <span class="form-label" style="margin:0">Активен</span>
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Сохранить</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script type="module">
+  import { initAuth, loginWithEmail } from './js/auth.js?v=1.0.4';
+  import { initNavbar, showToast } from './js/utils.js?v=1.0.4';
+  import { initAdminPage } from './js/admin.js?v=1.0.4';
+
+  initNavbar();
+  
+  // Dedicated Admin Login Form handler
+  const adminLoginForm = document.getElementById('admin-login-form');
+  adminLoginForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('adm-submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Вход...';
+    const email = document.getElementById('adm-email').value.trim();
+    const password = document.getElementById('adm-password').value;
+    try {
+      await loginWithEmail(email, password);
+    } catch (err) {
+      console.error(err);
+      showToast('Неверный логин или пароль администратора', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Войти в админ-панель';
+    }
+  });
+
+  initAuth((user, userData) => {
+    if (user && userData?.role === 'admin') {
+      document.getElementById('access-denied').classList.add('hidden');
+      document.getElementById('admin-main').classList.remove('hidden');
+      initAdminPage();
+    } else {
+      document.getElementById('access-denied').classList.remove('hidden');
+      document.getElementById('admin-main').classList.add('hidden');
+      if (user && userData?.role !== 'admin') {
+        showToast('У вашего аккаунта нет прав администратора', 'warning');
+      }
+    }
+  });
+</script>
+</body>
+</html>

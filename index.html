@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PetCare — Профессиональный груминг для вашего питомца</title>
+  <meta name="description" content="PetCare — запись в лучший груминг-салон. Стрижка, мытьё, маникюр для собак и кошек. Опытные специалисты, удобное онлайн-бронирование.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a78bfa'%3E%3Cpath d='M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    if (localStorage.getItem('petcare_auth_cached')) {
+      document.documentElement.classList.add('user-logged-in');
+    } else {
+      document.documentElement.classList.add('user-logged-out');
+    }
+  </script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z"/>
+        </svg>
+      </div>
+      <span>PetCare</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Услуги</a>
+      <a href="booking.html" class="nav-link">Запись</a>
+      <a href="profile.html" class="nav-link" data-auth="user" style="display:none">Кабинет</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-primary btn-sm" data-open-auth data-auth="guest">Войти</button>
+      <div data-auth="user" style="display:none;position:relative">
+        <button class="nav-user-btn" id="user-menu-btn">
+          <div class="nav-avatar" data-user-avatar>U</div>
+          <span data-user-name>Профиль</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div id="user-dropdown" class="hidden" style="position:absolute;top:calc(100%+8px);right:0;min-width:180px;border-radius:var(--radius-md);background:var(--bg-secondary);border:1px solid var(--border);box-shadow:var(--shadow-lg);padding:8px;z-index:300">
+          <a href="profile.html" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--text-secondary);transition:var(--transition-fast)" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background=''">Личный кабинет</a>
+          <a href="booking.html" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--text-secondary);transition:var(--transition-fast)" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background=''">Мои записи</a>
+          <a href="admin.html" data-auth="admin" class="hidden" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--color-purple-light);transition:var(--transition-fast)" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background=''">Админ-панель</a>
+          <hr style="border-color:var(--border);margin:6px 0">
+          <button data-logout style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--color-red);width:100%;text-align:left" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background=''">Выйти</button>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile nav -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="index.html" class="nav-link active">Услуги</a>
+  <a href="booking.html" class="nav-link">Запись</a>
+  <a href="profile.html" class="nav-link" data-auth="user" style="display:none">Кабинет</a>
+  <a href="admin.html" class="nav-link" data-auth="admin" style="display:none;color:var(--color-purple-light)">Админ-панель</a>
+  <button class="btn btn-primary btn-sm" data-open-auth data-auth="guest" style="margin-top:12px">Войти</button>
+  <button data-logout data-auth="user" class="btn btn-outline btn-sm hidden" style="margin-top:12px">Выйти</button>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Премиальный салон груминга
+        </div>
+        <h1>Профессиональный <span class="gradient-text">уход</span> для вашего питомца</h1>
+        <p>Записывайтесь онлайн к опытным грумерам. Стрижка, мытьё, гигиенические комплексы и спа-процедуры для здоровья и красоты вашего любимца.</p>
+        <div class="hero-actions">
+          <a href="booking.html" class="btn btn-primary btn-xl">Записаться сейчас</a>
+          <a href="#services" class="btn btn-secondary btn-lg">Услуги и цены</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="num" id="stat-happy-pets">2 850+</div>
+            <div class="label">Довольных питомцев</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num" id="stat-rating">4.9 ★</div>
+            <div class="label">Средний рейтинг</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num" id="stat-specialists">8</div>
+            <div class="label">Специалистов</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="glow-orb glow-1"></div>
+        <div class="glow-orb glow-2"></div>
+        <div class="hero-showcase">
+          <div class="hero-showcase-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Премиальный груминг-салон
+          </div>
+          <div class="hero-showcase-title">Безупречная забота о питомце</div>
+          <p class="hero-showcase-desc">Используем гипоаллергенную косметику, профессиональное оборудование и бережный подход к каждому характеру.</p>
+          
+          <div class="hero-feature-row">
+            <div class="hero-feature-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:.85rem;color:var(--text-primary)">Безопасность и стерильность</div>
+              <div style="font-size:.74rem;color:var(--text-muted)">Инструменты проходят трёхэтапную дезинфекцию</div>
+            </div>
+          </div>
+
+          <div class="hero-feature-row">
+            <div class="hero-feature-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:.85rem;color:var(--text-primary)">Удобная онлайн-запись</div>
+              <div style="font-size:.74rem;color:var(--text-muted)">Моментальное бронирование без очередей и ожидания</div>
+            </div>
+          </div>
+
+          <div class="hero-feature-row">
+            <div class="hero-feature-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:.85rem;color:var(--text-primary)">Топ-мастера с опытом</div>
+              <div style="font-size:.74rem;color:var(--text-muted)">Дипломированные грумеры и кинологи</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title">Наши услуги</h2>
+      <p class="section-subtitle">Профессиональный уход для собак, кошек и других любимцев</p>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="search-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input type="search" class="search-input" id="search-input" placeholder="Поиск услуг..." autocomplete="off">
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Категория:</span>
+        <button class="filter-chip active" data-cat="all">Все</button>
+        <button class="filter-chip" data-cat="Стрижка">Стрижка</button>
+        <button class="filter-chip" data-cat="Мытьё">Мытьё</button>
+        <button class="filter-chip" data-cat="Маникюр">Маникюр</button>
+        <button class="filter-chip" data-cat="Уши">Уши</button>
+        <button class="filter-chip" data-cat="Комплекс">Комплекс</button>
+      </div>
+      <select class="sort-select" id="sort-select">
+        <option value="rating">По рейтингу</option>
+        <option value="price-asc">Цена: по возрастанию</option>
+        <option value="price-desc">Цена: по убыванию</option>
+        <option value="name">По названию</option>
+      </select>
+    </div>
+
+    <!-- Services grid -->
+    <div class="grid-3" id="services-grid">
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-wrap" id="pagination-wrap" style="display:none">
+      <div class="pagination-info" id="pagination-info"></div>
+      <button class="btn-load-more" id="load-more-btn">Показать ещё</button>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIALISTS -->
+<section class="section" id="specialists" style="background:rgba(124,58,237,.03);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div class="section-head centered">
+      <h2 class="section-title">Наши специалисты</h2>
+      <p class="section-subtitle">Опытные мастера, которые искренне любят животных</p>
+    </div>
+    <div class="grid-4" id="specialists-grid">
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="section">
+  <div class="container">
+    <div class="section-head centered">
+      <h2 class="section-title">Почему выбирают нас</h2>
+    </div>
+    <div class="grid-4">
+      <div class="why-us-card animate-in delay-1">
+        <div class="why-us-icon" style="background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);color:var(--color-purple-light)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+        </div>
+        <h3 class="why-us-title">Опыт от 5 лет</h3>
+        <p class="why-us-desc">Команда сертифицированных специалистов с многолетним стажем работы</p>
+      </div>
+      <div class="why-us-card animate-in delay-2">
+        <div class="why-us-icon" style="background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:#34d399">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3 class="why-us-title">Безопасность</h3>
+        <p class="why-us-desc">Только гипоаллергенная косметика и трёхступенчатая стерилизация</p>
+      </div>
+      <div class="why-us-card animate-in delay-3">
+        <div class="why-us-icon" style="background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.3);color:var(--color-cyan)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <h3 class="why-us-title">Онлайн-запись</h3>
+        <p class="why-us-desc">Удобное бронирование даты, времени и мастера в пару кликов</p>
+      </div>
+      <div class="why-us-card animate-in delay-4">
+        <div class="why-us-icon" style="background:rgba(236,72,153,.15);border:1px solid rgba(236,72,153,.3);color:var(--color-pink-light)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3 class="why-us-title">Забота и любовь</h3>
+        <p class="why-us-desc">Индивидуальный подход без стресса и принуждения для вашего друга</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="logo-icon" style="width:34px;height:34px;border-radius:8px;background:var(--gradient-primary);display:flex;align-items:center;justify-content:center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z"/>
+            </svg>
+          </div>
+          PetCare
+        </div>
+        <p class="footer-desc">Профессиональный груминг-салон для ваших питомцев. Онлайн-запись, опытные специалисты, забота и любовь к каждому животному.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Услуги</h4>
+        <div class="footer-links">
+          <a href="index.html?cat=Стрижка">Стрижка</a>
+          <a href="index.html?cat=Мытьё">Купание</a>
+          <a href="index.html?cat=Маникюр">Маникюр</a>
+          <a href="index.html?cat=Комплекс">Комплексный уход</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Навигация</h4>
+        <div class="footer-links">
+          <a href="index.html">Главная</a>
+          <a href="booking.html">Запись</a>
+          <a href="profile.html">Личный кабинет</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Контакты</h4>
+        <div class="footer-links">
+          <a id="footer-phone" href="tel:+77771234567">+7 (777) 123-45-67</a>
+          <a id="footer-email" href="mailto:info@petcare.kz">info@petcare.kz</a>
+          <span id="footer-address" style="color:var(--text-secondary);font-size:.88rem">г. Алматы, пр. Достык, 42</span>
+          <span id="footer-hours" style="color:var(--text-secondary);font-size:.88rem">09:00 – 20:00 ежедневно</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 PetCare. Все права защищены.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Вход в PetCare</h2>
+      <button class="modal-close" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-tab="login">Вход</button>
+      <button class="modal-tab" data-tab="register">Регистрация</button>
+    </div>
+
+    <!-- Login -->
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label" for="login-email">Email</label>
+        <input class="form-control" type="email" id="login-email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="login-password">Пароль</label>
+        <div class="input-icon-wrap">
+          <input class="form-control" type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+          <button type="button" class="input-icon-right toggle-pass" data-for="login-password" aria-label="Показать пароль">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <a class="forgot-link" id="forgot-link">Забыли пароль?</a>
+      </div>
+      <button type="submit" class="btn btn-primary w-full" style="width:100%;margin-top:8px">Войти</button>
+    </form>
+
+    <!-- Register -->
+    <form id="register-form" class="hidden">
+      <div class="form-group">
+        <label class="form-label" for="reg-name">Ваше имя</label>
+        <input class="form-control" type="text" id="reg-name" placeholder="Иван Иванов" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="reg-email">Email</label>
+        <input class="form-control" type="email" id="reg-email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="reg-password">Пароль</label>
+        <div class="input-icon-wrap">
+          <input class="form-control" type="password" id="reg-password" placeholder="Минимум 6 символов" required autocomplete="new-password">
+          <button type="button" class="input-icon-right toggle-pass" data-for="reg-password" aria-label="Показать пароль">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="reg-password2">Повторите пароль</label>
+        <input class="form-control" type="password" id="reg-password2" placeholder="Повторите пароль" required autocomplete="new-password">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">Создать аккаунт</button>
+    </form>
+
+    <!-- Reset Password -->
+    <form id="reset-form" class="hidden">
+      <p style="font-size:.88rem;color:var(--text-secondary);margin-bottom:20px">Введите email и мы отправим ссылку для сброса пароля.</p>
+      <div class="form-group">
+        <label class="form-label" for="reset-email">Email</label>
+        <input class="form-control" type="email" id="reset-email" placeholder="you@example.com" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">Отправить</button>
+      <button type="button" id="back-to-login" class="btn btn-outline" style="width:100%;margin-top:8px">← Назад</button>
+    </form>
+  </div>
+</div>
+
+<!-- SERVICE MODAL -->
+<div class="modal-overlay" id="service-modal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h2 class="modal-title" id="sm-title">Название услуги</h2>
+      <button class="modal-close" aria-label="Закрыть">✕</button>
+    </div>
+    <div id="sm-content"></div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script type="module">
+  import { initAuth } from './js/auth.js?v=1.0.5';
+  import { initNavbar, initScrollAnimations } from './js/utils.js?v=1.0.5';
+  import { initServicesPage } from './js/services.js?v=1.0.5';
+  import { initSpecialistsSection } from './js/specialists.js?v=1.0.5';
+
+  initNavbar();
+  initScrollAnimations();
+  initAuth(() => {});
+  initServicesPage();
+  initSpecialistsSection();
+
+  // URL category filter
+  const params = new URLSearchParams(window.location.search);
+  const urlCat = params.get('cat');
+  if (urlCat) {
+    document.querySelectorAll('.filter-chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.cat === urlCat);
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет — PetCare</title>
+  <meta name="description" content="Управляйте профилем, питомцами и записями в груминг-салон PetCare.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a78bfa'%3E%3Cpath d='M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    if (localStorage.getItem('petcare_auth_cached')) {
+      document.documentElement.classList.add('user-logged-in');
+    } else {
+      document.documentElement.classList.add('user-logged-out');
+    }
+  </script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z"/>
+        </svg>
+      </div>
+      <span>PetCare</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Услуги</a>
+      <a href="booking.html" class="nav-link">Запись</a>
+      <a href="profile.html" class="nav-link active" data-auth="user" style="display:none">Кабинет</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-primary btn-sm" data-open-auth data-auth="guest">Войти</button>
+      <div data-auth="user" style="display:none;position:relative">
+        <button class="nav-user-btn" id="user-menu-btn">
+          <div class="nav-avatar" data-user-avatar>U</div>
+          <span data-user-name>Профиль</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div id="user-dropdown" class="hidden" style="position:absolute;top:calc(100%+8px);right:0;min-width:180px;border-radius:var(--radius-md);background:var(--bg-secondary);border:1px solid var(--border);box-shadow:var(--shadow-lg);padding:8px;z-index:300">
+          <a href="profile.html" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--text-secondary);transition:var(--transition-fast)" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background=''">Личный кабинет</a>
+          <a href="booking.html" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--text-secondary);transition:var(--transition-fast)" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background=''">Мои записи</a>
+          <a href="admin.html" data-auth="admin" class="hidden" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--color-purple-light);transition:var(--transition-fast)" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background=''">Админ-панель</a>
+          <hr style="border-color:var(--border);margin:6px 0">
+          <button data-logout style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--color-red);width:100%;text-align:left" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background=''">Выйти</button>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Меню"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="index.html" class="nav-link">Главная</a>
+  <a href="booking.html" class="nav-link">Запись</a>
+  <a href="profile.html" class="nav-link active">Кабинет</a>
+  <button data-logout class="btn btn-outline btn-sm" style="margin-top:12px" data-auth="user">Выйти</button>
+</div>
+
+<section class="profile-section" style="padding: calc(var(--nav-h) + 40px) 0 60px">
+  <div class="container">
+
+    <!-- Auth required -->
+    <div id="auth-required" class="hidden" style="text-align:center;padding:60px 24px;max-width:480px;margin:0 auto">
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-purple-light)"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h2 style="margin-bottom:8px">Войдите в личный кабинет</h2>
+      <p style="color:var(--text-secondary);margin-bottom:24px;font-size:.9rem">В личном кабинете сохраняются ваши питомцы, активные и прошлые записи, а также оставленные отзывы.</p>
+      <div>
+        <button class="btn btn-primary btn-lg" data-open-auth style="width:100%">Войти или зарегистрироваться</button>
+      </div>
+    </div>
+
+    <div id="profile-main" class="profile-grid hidden">
+      <!-- Sidebar -->
+      <div class="profile-sidebar">
+        <div class="profile-avatar-lg" id="profile-avatar-display">U</div>
+        <div class="profile-name" id="profile-name-display">Загрузка...</div>
+        <div class="profile-email" id="profile-email-display"></div>
+        <nav class="profile-nav">
+          <div class="profile-nav-item active" data-section="bookings">Мои записи</div>
+          <div class="profile-nav-item" data-section="pets">Мои питомцы</div>
+          <div class="profile-nav-item" data-section="reviews">Мои отзывы</div>
+          <div class="profile-nav-item" data-section="settings">Настройки</div>
+          <div class="profile-nav-item" style="color:var(--color-red);margin-top:8px" data-logout>Выйти</div>
+        </nav>
+      </div>
+
+      <!-- Content -->
+      <div class="profile-content">
+        <!-- Bookings -->
+        <div class="content-section active" id="section-bookings">
+          <div class="content-title">
+            <span>Мои записи</span>
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+            <button class="filter-chip active" data-filter="all">Все</button>
+            <button class="filter-chip" data-filter="pending">Ожидание</button>
+            <button class="filter-chip" data-filter="confirmed">Подтверждено</button>
+            <button class="filter-chip" data-filter="completed">Завершено</button>
+            <button class="filter-chip" data-filter="cancelled">Отменено</button>
+          </div>
+          <div id="bookings-list">
+            <div class="spinner" style="margin:30px auto;display:block;width:fit-content"></div>
+          </div>
+        </div>
+
+        <!-- Pets -->
+        <div class="content-section" id="section-pets">
+          <div class="content-title">
+            <span>Мои питомцы</span>
+            <button class="btn btn-primary btn-sm" id="open-add-pet">+ Добавить</button>
+          </div>
+          <div class="pets-grid" id="pets-list">
+            <div class="spinner" style="margin:20px auto;grid-column:1/-1"></div>
+          </div>
+        </div>
+
+        <!-- Reviews -->
+        <div class="content-section" id="section-reviews">
+          <div class="content-title" style="display:flex;align-items:center;justify-content:space-between">
+            <span>Мои отзывы</span>
+            <button class="btn btn-outline btn-sm" id="open-add-review-btn">+ Написать отзыв</button>
+          </div>
+          <div id="reviews-list">
+            <div class="spinner" style="margin:30px auto;display:block;width:fit-content"></div>
+          </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="content-section" id="section-settings">
+          <div class="content-title">Настройки профиля</div>
+          <form id="profile-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Имя</label>
+                <input class="form-control" id="settings-name" placeholder="Ваше имя">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Телефон</label>
+                <input class="form-control" id="settings-phone" placeholder="+7 (777) 000-00-00">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input class="form-control" id="settings-email" readonly style="opacity:.6;cursor:not-allowed">
+              <p class="form-hint">Email привязан к вашей учетной записи</p>
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pet modal -->
+<div class="modal-overlay" id="pet-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="pet-modal-title">Питомец</h2>
+      <button class="modal-close">✕</button>
+    </div>
+    <form id="pet-form">
+      <input type="hidden" id="pet-form-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Кличка</label>
+          <input class="form-control" id="pf-name" required placeholder="Барсик">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Тип</label>
+          <select class="form-control" id="pf-type">
+            <option value="dog">Собака</option>
+            <option value="cat">Кошка</option>
+            <option value="rabbit">Кролик</option>
+            <option value="bird">Птица</option>
+            <option value="other">Другой питомец</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Порода</label>
+          <input class="form-control" id="pf-breed" placeholder="Порода">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Возраст</label>
+          <input class="form-control" type="number" id="pf-age" placeholder="лет" min="0" max="30">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Вес (кг)</label>
+        <input class="form-control" type="number" id="pf-weight" placeholder="кг" step="0.1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Примечания</label>
+        <textarea class="form-control" id="pf-notes" placeholder="Особенности характера, аллергии..."></textarea>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button type="submit" class="btn btn-primary" style="flex:1">Сохранить</button>
+        <button type="button" class="btn btn-danger btn-sm" id="delete-pet-btn" style="display:none">Удалить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Review modal -->
+<div class="modal-overlay" id="review-modal">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <div>
+        <h2 class="modal-title">Оставить отзыв</h2>
+        <div id="rv-modal-subtitle" style="font-size:.82rem;color:var(--color-purple-light);margin-top:2px">Поделитесь вашим опытом посещения салона</div>
+      </div>
+      <button class="modal-close" aria-label="Закрыть">✕</button>
+    </div>
+    <form id="review-form">
+      <input type="hidden" id="rv-booking-id">
+      <input type="hidden" id="rv-service-id">
+      <input type="hidden" id="rv-specialist-id">
+
+      <div class="form-row" id="rv-dropdowns-row">
+        <div class="form-group" style="flex:1">
+          <label class="form-label" for="rv-specialist-select">Мастер</label>
+          <select class="form-control" id="rv-specialist-select" required>
+            <option value="sp-1" data-name="Ольга Смирнова">Ольга Смирнова (Топ-грумер)</option>
+            <option value="sp-2" data-name="Алексей Волков">Алексей Волков (Модельные стрижки)</option>
+            <option value="sp-3" data-name="Анна Белова">Анна Белова (Кошачий груминг)</option>
+            <option value="sp-4" data-name="Дмитрий Кот">Дмитрий Кот (Ветеринарный гигиенист)</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1">
+          <label class="form-label" for="rv-service-select">Услуга</label>
+          <select class="form-control" id="rv-service-select" required>
+            <option value="srv-1" data-name="Комплексный VIP-груминг для собак">Комплексный VIP-груминг</option>
+            <option value="srv-2" data-name="Модельная стрижка собак средних пород">Модельная стрижка собак</option>
+            <option value="srv-3" data-name="Экспресс-линька и вычёсывание кошек">Экспресс-линька кошек</option>
+            <option value="srv-4" data-name="Гигиеническая стрижка для щенков и котят">Гигиеническая стрижка</option>
+            <option value="srv-5" data-name="Спа-купание с озонотерапией и маской">Спа-купание с озоном</option>
+            <option value="srv-6" data-name="Маникюр: обрезка и гриндерная шлифовка когтей">Маникюр и когти</option>
+            <option value="srv-7" data-name="Гигиеническая чистка ушей и глаз">Чистка ушей и глаз</option>
+            <option value="srv-8" data-name="Ультразвуковая чистка зубов без наркоза">УЗ-чистка зубов без наркоза</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="text-align:center;padding:16px 12px;background:rgba(124,58,237,.06);border-radius:var(--radius-md);border:1px solid rgba(124,58,237,.18);margin-bottom:16px">
+        <label class="form-label" style="margin-bottom:8px;font-weight:700">Оценка услуги и мастера</label>
+        <div class="star-rating-input" id="star-rating" style="display:flex;justify-content:center;align-items:center;gap:8px">
+          <button type="button" class="star-btn active" data-val="1" aria-label="1 звезда" style="background:none;border:none;cursor:pointer;padding:4px">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </button>
+          <button type="button" class="star-btn active" data-val="2" aria-label="2 звезды" style="background:none;border:none;cursor:pointer;padding:4px">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </button>
+          <button type="button" class="star-btn active" data-val="3" aria-label="3 звезды" style="background:none;border:none;cursor:pointer;padding:4px">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </button>
+          <button type="button" class="star-btn active" data-val="4" aria-label="4 звезды" style="background:none;border:none;cursor:pointer;padding:4px">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </button>
+          <button type="button" class="star-btn active" data-val="5" aria-label="5 звёзд" style="background:none;border:none;cursor:pointer;padding:4px">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </button>
+        </div>
+        <input type="hidden" id="rv-rating" value="5">
+        <div id="star-rating-label" style="font-weight:700;font-size:.92rem;color:#f59e0b;margin-top:8px;letter-spacing:.3px">
+          5 из 5 · Превосходно!
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="rv-text">Текст отзыва</label>
+        <textarea class="form-control" id="rv-text" placeholder="Поделитесь вашими впечатлениями от процедуры: отношение к питомцу, аккуратность стрижки или чистки, атмосфера в салоне..." rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;font-size:.95rem;padding:12px">Опубликовать отзыв</button>
+    </form>
+  </div>
+</div>
+
+<!-- Auth modal -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <div class="modal-header"><h2 class="modal-title">Вход в PetCare</h2><button class="modal-close">✕</button></div>
+    <div class="modal-tabs"><button class="modal-tab active" data-tab="login">Вход</button><button class="modal-tab" data-tab="register">Регистрация</button></div>
+    <form id="login-form">
+      <div class="form-group"><label class="form-label">Email</label><input class="form-control" type="email" id="login-email" required></div>
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <div class="input-icon-wrap">
+          <input class="form-control" type="password" id="login-password" required>
+          <button type="button" class="input-icon-right toggle-pass" data-for="login-password" aria-label="Показать пароль">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <a class="forgot-link" id="forgot-link">Забыли пароль?</a>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">Войти</button>
+    </form>
+    <form id="register-form" class="hidden">
+      <div class="form-group"><label class="form-label">Имя</label><input class="form-control" type="text" id="reg-name" required></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-control" type="email" id="reg-email" required></div>
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <div class="input-icon-wrap">
+          <input class="form-control" type="password" id="reg-password" required>
+          <button type="button" class="input-icon-right toggle-pass" data-for="reg-password" aria-label="Показать пароль">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Повторите пароль</label><input class="form-control" type="password" id="reg-password2" required></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">Создать аккаунт</button>
+    </form>
+    <form id="reset-form" class="hidden"><div class="form-group"><label class="form-label">Email</label><input class="form-control" type="email" id="reset-email" required></div><button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">Отправить</button><button type="button" id="back-to-login" class="btn btn-outline" style="width:100%;margin-top:8px">← Назад</button></form>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script type="module">
+  import { initAuth } from './js/auth.js?v=1.0.2';
+  import { initNavbar } from './js/utils.js?v=1.0.2';
+  import { initProfilePage } from './js/profile.js?v=1.0.2';
+
+  initNavbar();
+  initAuth((user) => {
+    if (user) {
+      document.getElementById('auth-required').classList.add('hidden');
+      document.getElementById('profile-main').classList.remove('hidden');
+      initProfilePage(user);
+    } else {
+      document.getElementById('auth-required').classList.remove('hidden');
+      document.getElementById('profile-main').classList.add('hidden');
+    }
+  });
+</script>
+</body>
+</html>

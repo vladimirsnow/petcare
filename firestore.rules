@@ -1,0 +1,70 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Helper functions ────────────────────────────────────
+    function isAuth() { return request.auth != null; }
+    function isOwner(uid) { return request.auth.uid == uid; }
+    function isAdmin() {
+      return isAuth() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // ─── Users ───────────────────────────────────────────────
+    match /users/{userId} {
+      allow read: if isAuth() && (isOwner(userId) || isAdmin());
+      allow create: if isAuth() && isOwner(userId);
+      allow update: if isAuth() && (isOwner(userId) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // ─── Services ────────────────────────────────────────────
+    match /services/{serviceId} {
+      allow read: if true; // Public
+      allow create, delete: if isAdmin();
+      allow update: if isAuth();
+    }
+
+    // ─── Specialists ─────────────────────────────────────────
+    match /specialists/{specialistId} {
+      allow read: if true; // Public
+      allow create, delete: if isAdmin();
+      allow update: if isAuth();
+    }
+
+    // ─── Pets ────────────────────────────────────────────────
+    match /pets/{petId} {
+      allow read: if isAuth() && (resource.data.ownerId == request.auth.uid || isAdmin());
+      allow create: if isAuth() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isAuth() && (resource.data.ownerId == request.auth.uid || isAdmin());
+      allow delete: if isAuth() && (resource.data.ownerId == request.auth.uid || isAdmin());
+    }
+
+    // ─── Bookings ────────────────────────────────────────────
+    match /bookings/{bookingId} {
+      allow read: if isAuth();
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuth() && (
+        (resource.data.userId == request.auth.uid &&
+         request.resource.data.status == 'cancelled')
+        ||
+        isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+
+    // ─── Reviews ─────────────────────────────────────────────
+    match /reviews/{reviewId} {
+      allow read: if true; // Public
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuth();
+      allow delete: if isAuth();
+    }
+
+    // ─── Settings ────────────────────────────────────────────
+    match /settings/{docId} {
+      allow read: if true; // Public stats & salon info
+      allow write: if isAuth();
+    }
+  }
+}

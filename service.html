@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Детали услуги — PetCare</title>
+  <meta name="description" content="Подробная информация об услуге груминга в PetCare. Цены, отзывы, длительность и онлайн-запись.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a78bfa'%3E%3Cpath d='M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    if (localStorage.getItem('petcare_auth_cached')) {
+      document.documentElement.classList.add('user-logged-in');
+    } else {
+      document.documentElement.classList.add('user-logged-out');
+    }
+  </script>
+  <style>
+    .service-detail-hero {
+      padding: calc(var(--nav-h) + 40px) 0 40px;
+    }
+    .detail-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(24px);
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 40px;
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 36px;
+      align-items: start;
+    }
+    .detail-visual {
+      background: linear-gradient(135deg, rgba(124,58,237,.25), rgba(236,72,153,.2));
+      border-radius: var(--radius-lg);
+      height: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(124,58,237,.3);
+      position: relative;
+      overflow: hidden;
+      color: var(--color-purple-light);
+    }
+    .detail-meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 18px 0 24px;
+    }
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      background: var(--bg-glass-strong);
+      border: 1px solid var(--border);
+      font-size: .84rem;
+      font-weight: 500;
+    }
+    .detail-price-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px;
+      border-radius: var(--radius-md);
+      background: rgba(124,58,237,.08);
+      border: 1px solid rgba(124,58,237,.25);
+      margin: 28px 0;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .detail-price-value {
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-glass-strong);
+      border: 1px solid var(--border);
+    }
+    .feature-icon {
+      color: var(--color-purple-light);
+      flex-shrink: 0;
+    }
+    .reviews-section {
+      margin-top: 36px;
+      border-top: 1px solid var(--border);
+      padding-top: 36px;
+    }
+    .add-review-box {
+      background: var(--bg-glass-strong);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 860px) {
+      .detail-grid { grid-template-columns: 1fr; }
+      .detail-visual { height: 220px; }
+      .detail-card { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z"/>
+        </svg>
+      </div>
+      <span>PetCare</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Услуги</a>
+      <a href="booking.html" class="nav-link">Запись</a>
+      <a href="profile.html" class="nav-link" data-auth="user" style="display:none">Кабинет</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-primary btn-sm" data-open-auth data-auth="guest">Войти</button>
+      <div data-auth="user" style="display:none;position:relative">
+        <button class="nav-user-btn" id="user-menu-btn">
+          <div class="nav-avatar" data-user-avatar>U</div>
+          <span data-user-name>Профиль</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div id="user-dropdown" class="hidden" style="position:absolute;top:calc(100%+8px);right:0;min-width:180px;border-radius:var(--radius-md);background:var(--bg-secondary);border:1px solid var(--border);box-shadow:var(--shadow-lg);padding:8px;z-index:300">
+          <a href="profile.html" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--text-secondary);transition:var(--transition-fast)" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background=''">Личный кабинет</a>
+          <a href="booking.html" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--text-secondary);transition:var(--transition-fast)" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background=''">Мои записи</a>
+          <a href="admin.html" data-auth="admin" class="hidden" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--color-purple-light);transition:var(--transition-fast)" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background=''">Админ-панель</a>
+          <hr style="border-color:var(--border);margin:6px 0">
+          <button data-logout style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--color-red);width:100%;text-align:left" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background=''">Выйти</button>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile nav -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="index.html" class="nav-link">Все услуги</a>
+  <a href="booking.html" class="nav-link">Запись</a>
+  <a href="profile.html" class="nav-link" data-auth="user" style="display:none">Личный кабинет</a>
+  <a href="admin.html" class="nav-link" data-auth="admin" style="display:none;color:var(--color-purple-light)">Админ-панель</a>
+  <button class="btn btn-primary btn-sm" data-open-auth data-auth="guest" style="margin-top:12px">Войти</button>
+  <button data-logout data-auth="user" class="btn btn-outline btn-sm hidden" style="margin-top:12px">Выйти</button>
+</div>
+
+<!-- MAIN DETAIL VIEW -->
+<section class="service-detail-hero">
+  <div class="container">
+    <div style="margin-bottom: 20px;">
+      <a href="index.html" class="btn btn-secondary btn-sm">← Назад к каталогу услуг</a>
+    </div>
+
+    <!-- Loading skeleton or Main Container -->
+    <div id="service-detail-content">
+      <div class="skeleton" style="height: 480px; border-radius: var(--radius-lg); margin-bottom: 40px;"></div>
+    </div>
+
+    <!-- RELATED SERVICES -->
+    <div id="related-services-wrap" style="margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--border);">
+      <div class="section-head">
+        <h2 class="section-title">Похожие услуги</h2>
+        <p class="section-subtitle">Вам также могут понравиться эти процедуры для питомца</p>
+      </div>
+      <div class="grid-3" id="related-services-grid">
+        <div class="skeleton skel-card"></div>
+        <div class="skeleton skel-card"></div>
+        <div class="skeleton skel-card"></div>
+      </div>
+      <div class="pagination-wrap" id="related-pagination-wrap" style="display:none">
+        <button class="btn-load-more" id="related-load-more-btn">Показать ещё</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="logo-icon" style="width:34px;height:34px;border-radius:8px;background:var(--gradient-primary);display:flex;align-items:center;justify-content:center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z"/>
+            </svg>
+          </div>
+          PetCare
+        </div>
+        <p class="footer-desc">Профессиональный груминг-салон. Любовь и безупречная забота о ваших питомцах.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Услуги</h4>
+        <div class="footer-links">
+          <a href="index.html?cat=Стрижка">Стрижка</a>
+          <a href="index.html?cat=Мытьё">Мытьё и гигиена</a>
+          <a href="index.html?cat=Маникюр">Когти и лапки</a>
+          <a href="index.html?cat=Комплекс">Комплексный уход</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Навигация</h4>
+        <div class="footer-links">
+          <a href="index.html">Каталог</a>
+          <a href="booking.html">Запись</a>
+          <a href="profile.html">Кабинет</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Контакты</h4>
+        <div class="footer-links">
+          <a id="footer-phone" href="tel:+77771234567">+7 (777) 123-45-67</a>
+          <a id="footer-email" href="mailto:info@petcare.kz">info@petcare.kz</a>
+          <span id="footer-address" style="color:var(--text-secondary);font-size:.88rem">г. Алматы, пр. Достык, 42</span>
+          <span id="footer-hours" style="color:var(--text-secondary);font-size:.88rem">09:00 – 20:00 ежедневно</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 PetCare. Все права защищены.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Вход в PetCare</h2>
+      <button class="modal-close" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-tab="login">Вход</button>
+      <button class="modal-tab" data-tab="register">Регистрация</button>
+    </div>
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label" for="login-email">Email</label>
+        <input class="form-control" type="email" id="login-email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="login-password">Пароль</label>
+        <div class="input-icon-wrap">
+          <input class="form-control" type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+          <button type="button" class="input-icon-right toggle-pass" data-for="login-password" aria-label="Показать пароль">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <a class="forgot-link" id="forgot-link">Забыли пароль?</a>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">Войти</button>
+    </form>
+    <form id="register-form" class="hidden">
+      <div class="form-group">
+        <label class="form-label" for="reg-name">Ваше имя</label>
+        <input class="form-control" type="text" id="reg-name" placeholder="Иван Иванов" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="reg-email">Email</label>
+        <input class="form-control" type="email" id="reg-email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="reg-password">Пароль</label>
+        <div class="input-icon-wrap">
+          <input class="form-control" type="password" id="reg-password" placeholder="Минимум 6 символов" required autocomplete="new-password">
+          <button type="button" class="input-icon-right toggle-pass" data-for="reg-password" aria-label="Показать пароль">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="reg-password2">Повторите пароль</label>
+        <input class="form-control" type="password" id="reg-password2" placeholder="Повторите пароль" required autocomplete="new-password">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">Создать аккаунт</button>
+    </form>
+    <form id="reset-form" class="hidden">
+      <div class="form-group">
+        <label class="form-label" for="reset-email">Email</label>
+        <input class="form-control" type="email" id="reset-email" placeholder="you@example.com" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">Отправить</button>
+      <button type="button" id="back-to-login" class="btn btn-outline" style="width:100%;margin-top:8px">← Назад</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script type="module" src="js/service-detail.js"></script>
+</body>
+</html>

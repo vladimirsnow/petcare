@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Запись в салон — PetCare</title>
+  <meta name="description" content="Запишите питомца в груминг-салон PetCare. Выберите услугу, специалиста и удобное время.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a78bfa'%3E%3Cpath d='M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    if (localStorage.getItem('petcare_auth_cached')) {
+      document.documentElement.classList.add('user-logged-in');
+    } else {
+      document.documentElement.classList.add('user-logged-out');
+    }
+  </script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z"/>
+        </svg>
+      </div>
+      <span>PetCare</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Услуги</a>
+      <a href="booking.html" class="nav-link active">Запись</a>
+      <a href="profile.html" class="nav-link" data-auth="user" style="display:none">Кабинет</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-primary btn-sm" data-open-auth data-auth="guest">Войти</button>
+      <div data-auth="user" style="display:none;position:relative">
+        <button class="nav-user-btn" id="user-menu-btn">
+          <div class="nav-avatar" data-user-avatar>U</div>
+          <span data-user-name>Профиль</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div id="user-dropdown" class="hidden" style="position:absolute;top:calc(100%+8px);right:0;min-width:180px;border-radius:var(--radius-md);background:var(--bg-secondary);border:1px solid var(--border);box-shadow:var(--shadow-lg);padding:8px;z-index:300">
+          <a href="profile.html" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--text-secondary);transition:var(--transition-fast)" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background=''">Личный кабинет</a>
+          <a href="booking.html" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--text-secondary);transition:var(--transition-fast)" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background=''">Мои записи</a>
+          <a href="admin.html" data-auth="admin" class="hidden" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--color-purple-light);transition:var(--transition-fast)" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background=''">Админ-панель</a>
+          <hr style="border-color:var(--border);margin:6px 0">
+          <button data-logout style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);font-size:.86rem;color:var(--color-red);width:100%;text-align:left" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background=''">Выйти</button>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Меню"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="index.html" class="nav-link">Главная</a>
+  <a href="booking.html" class="nav-link active">Запись</a>
+  <a href="profile.html" class="nav-link" data-auth="user" style="display:none">Кабинет</a>
+</div>
+
+<section class="booking-section">
+  <div class="container">
+    <div class="page-head">
+      <h1>Онлайн-запись на груминг</h1>
+      <p>Выберите питомца, услугу, специалиста и удобное время посещения</p>
+    </div>
+
+    <!-- Login required notice -->
+    <div id="auth-required" class="hidden" style="text-align:center;padding:60px 24px;max-width:480px;margin:0 auto">
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-purple-light)"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h2 style="margin-bottom:8px">Войдите, чтобы записаться</h2>
+      <p style="color:var(--text-secondary);margin-bottom:24px;font-size:.9rem">Для сохранения записи и истории питомцев требуется авторизация в аккаунте.</p>
+      <div>
+        <button class="btn btn-primary btn-lg" data-open-auth style="width:100%">Войти или зарегистрироваться</button>
+      </div>
+    </div>
+
+    <div id="booking-main" class="hidden">
+      <div class="booking-grid">
+        <!-- Left: Booking form -->
+        <div>
+          <!-- Step indicator -->
+          <div class="steps" id="booking-steps">
+            <div class="step active" data-step="1"><div class="step-num">1</div><div class="step-label">Питомец</div></div>
+            <div class="step" data-step="2"><div class="step-num">2</div><div class="step-label">Услуга</div></div>
+            <div class="step" data-step="3"><div class="step-num">3</div><div class="step-label">Специалист</div></div>
+            <div class="step" data-step="4"><div class="step-num">4</div><div class="step-label">Время</div></div>
+          </div>
+
+          <!-- Step 1: Pet -->
+          <div class="form-card" id="step-1">
+            <div class="form-title">
+              <div class="icon-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 11c-1.66 0-3 1.34-3 3 0 1.5 1.5 3 3 3s3-1.5 3-3c0-1.66-1.34-3-3-3zm-5-3c-.83 0-1.5.67-1.5 1.5S6.17 11 7 11s1.5-.67 1.5-1.5S7.83 8 7 8zm10 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S17.83 8 17 8zm-7.5-3c-.83 0-1.5.67-1.5 1.5S8.67 8 9.5 8s1.5-.67 1.5-1.5S10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S15.33 5 14.5 5z"/></svg>
+              </div>
+              Выберите питомца
+            </div>
+            <div id="pet-selection" class="pets-grid">
+              <div class="spinner" style="margin:20px auto;grid-column:1/-1"></div>
+            </div>
+            <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px">
+              <button class="btn btn-outline btn-sm" id="add-pet-quick">+ Добавить питомца</button>
+            </div>
+          </div>
+
+          <!-- Step 2: Service -->
+          <div class="form-card hidden" id="step-2" style="margin-top:20px">
+            <div class="form-title">
+              <div class="icon-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+              </div>
+              Выберите услугу
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="search" id="service-search" placeholder="Поиск услуги...">
+            </div>
+            <div id="service-selection" style="display:flex;flex-direction:column;gap:10px">
+              <div class="spinner" style="margin:20px auto"></div>
+            </div>
+          </div>
+
+          <!-- Step 3: Specialist -->
+          <div class="form-card hidden" id="step-3" style="margin-top:20px">
+            <div class="form-title">
+              <div class="icon-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              Выберите специалиста
+            </div>
+            <div id="specialist-selection" style="display:flex;flex-direction:column;gap:10px">
+              <div class="spinner" style="margin:20px auto"></div>
+            </div>
+          </div>
+
+          <!-- Step 4: Date & Time -->
+          <div class="form-card hidden" id="step-4" style="margin-top:20px">
+            <div class="form-title">
+              <div class="icon-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              Выберите дату и время
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Дата</label>
+                <input type="date" class="form-control" id="booking-date" min="">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Продолжительность</label>
+                <input type="text" class="form-control" id="booking-duration" readonly>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Доступное время</label>
+              <div class="slots-grid" id="time-slots">
+                <p style="color:var(--text-muted);font-size:.85rem;grid-column:1/-1">Выберите дату</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Комментарий (необязательно)</label>
+              <textarea class="form-control" id="booking-notes" placeholder="Особые пожелания, особенности питомца..."></textarea>
+            </div>
+            <button class="btn btn-primary btn-lg" id="confirm-booking" style="width:100%" disabled>
+              Подтвердить запись
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Summary -->
+        <div>
+          <div class="summary-card">
+            <div class="summary-title">Ваша запись</div>
+            <div class="summary-row"><span class="summary-label">Питомец</span><span class="summary-val" id="s-pet">—</span></div>
+            <div class="summary-row"><span class="summary-label">Услуга</span><span class="summary-val" id="s-service">—</span></div>
+            <div class="summary-row"><span class="summary-label">Специалист</span><span class="summary-val" id="s-specialist">—</span></div>
+            <div class="summary-row"><span class="summary-label">Дата</span><span class="summary-val" id="s-date">—</span></div>
+            <div class="summary-row"><span class="summary-label">Время</span><span class="summary-val" id="s-time">—</span></div>
+            <div class="summary-row summary-total"><span class="summary-label" style="font-weight:700">Итого</span><span class="summary-val" id="s-price">—</span></div>
+          </div>
+
+          <!-- My Bookings -->
+          <div class="form-card" style="margin-top:20px">
+            <div class="form-title" style="margin-bottom:16px;font-size:1rem">
+              <span>Мои последние записи</span>
+            </div>
+            <div id="my-bookings">
+              <div class="spinner" style="margin:10px auto"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add Pet Modal -->
+<div class="modal-overlay" id="add-pet-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Добавить питомца</h2>
+      <button class="modal-close">✕</button>
+    </div>
+    <form id="add-pet-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Кличка</label>
+          <input class="form-control" id="pet-name" placeholder="Барсик" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Тип</label>
+          <select class="form-control" id="pet-type">
+            <option value="dog">Собака</option>
+            <option value="cat">Кошка</option>
+            <option value="rabbit">Кролик</option>
+            <option value="bird">Птица</option>
+            <option value="other">Другой питомец</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Порода</label>
+          <input class="form-control" id="pet-breed" placeholder="Золотистый ретривер">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Возраст (лет)</label>
+          <input class="form-control" type="number" id="pet-age" placeholder="3" min="0" max="30">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Особенности / примечания</label>
+        <textarea class="form-control" id="pet-notes" placeholder="Аллергия, особенности характера..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Сохранить питомца</button>
+    </form>
+  </div>
+</div>
+
+<!-- Cancel Booking Modal -->
+<div class="modal-overlay" id="cancel-modal">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header">
+      <h2 class="modal-title">Отменить запись?</h2>
+      <button class="modal-close">✕</button>
+    </div>
+    <p style="color:var(--text-secondary);margin-bottom:24px;font-size:.9rem">Запись будет отменена. Это действие нельзя отменить.</p>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary" style="flex:1" id="cancel-no">Нет, оставить</button>
+      <button class="btn btn-danger" style="flex:1" id="cancel-yes">Да, отменить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Auth modal -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Вход в PetCare</h2>
+      <button class="modal-close" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-tab="login">Вход</button>
+      <button class="modal-tab" data-tab="register">Регистрация</button>
+    </div>
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-control" type="email" id="login-email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <div class="input-icon-wrap">
+          <input class="form-control" type="password" id="login-password" placeholder="••••••••" required>
+          <button type="button" class="input-icon-right toggle-pass" data-for="login-password" aria-label="Показать пароль">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <a class="forgot-link" id="forgot-link">Забыли пароль?</a>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">Войти</button>
+    </form>
+    <form id="register-form" class="hidden">
+      <div class="form-group"><label class="form-label">Имя</label><input class="form-control" type="text" id="reg-name" required></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-control" type="email" id="reg-email" required></div>
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <div class="input-icon-wrap">
+          <input class="form-control" type="password" id="reg-password" placeholder="Минимум 6 символов" required>
+          <button type="button" class="input-icon-right toggle-pass" data-for="reg-password" aria-label="Показать пароль">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Повторите пароль</label><input class="form-control" type="password" id="reg-password2" required></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">Создать аккаунт</button>
+    </form>
+    <form id="reset-form" class="hidden">
+      <div class="form-group"><label class="form-label">Email</label><input class="form-control" type="email" id="reset-email" required></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">Отправить</button>
+      <button type="button" id="back-to-login" class="btn btn-outline" style="width:100%;margin-top:8px">← Назад</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script type="module">
+  import { initAuth } from './js/auth.js';
+  import { initNavbar } from './js/utils.js';
+  import { initBookingPage } from './js/booking.js';
+
+  initNavbar();
+  initAuth((user) => {
+    if (user) {
+      document.getElementById('auth-required').classList.add('hidden');
+      document.getElementById('booking-main').classList.remove('hidden');
+      initBookingPage(user);
+    } else {
+      document.getElementById('auth-required').classList.remove('hidden');
+      document.getElementById('booking-main').classList.add('hidden');
+    }
+  });
+</script>
+</body>
+</html>
