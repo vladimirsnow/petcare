@@ -1,5 +1,4 @@
-// firebase-config.js
-// !!! ЗАПОЛНИ СВОИМИ ДАННЫМИ ИЗ FIREBASE CONSOLE !!!
+// firebase-config.js — Firebase modular SDK v10 initialization
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';

@@ -9,6 +9,8 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import { showToast, openModal, closeModal, initModalClose } from './utils.js';
 
+export const ADMIN_EMAIL = 'admin@gmail.com';
+
 export let currentUser = null;
 export let currentUserData = null;
 let currentAuthCallback = null;
@@ -60,7 +62,7 @@ export function initAuth(onUserChanged) {
         if (snap.exists()) {
           currentUserData = snap.data();
         } else {
-          const isAdminEmail = user.email === 'admin@gmail.com';
+          const isAdminEmail = user.email === ADMIN_EMAIL;
           currentUserData = {
             uid: user.uid,
             email: user.email,
@@ -74,7 +76,7 @@ export function initAuth(onUserChanged) {
         }
       } catch (err) {
         console.warn('Error fetching user data from Firestore:', err);
-        const isAdminEmail = user.email === 'admin@gmail.com';
+        const isAdminEmail = user.email === ADMIN_EMAIL;
         currentUserData = {
           uid: user.uid,
           email: user.email,
@@ -87,7 +89,7 @@ export function initAuth(onUserChanged) {
         uid: user.uid,
         email: user.email,
         displayName: currentUserData?.displayName || user.displayName || user.email?.split('@')[0],
-        role: currentUserData?.role || (user.email === 'admin@gmail.com' ? 'admin' : 'user')
+        role: currentUserData?.role || (user.email === ADMIN_EMAIL ? 'admin' : 'user')
       }));
       document.documentElement.classList.add('user-logged-in');
       document.documentElement.classList.remove('user-logged-out');
@@ -150,7 +152,7 @@ export async function register(name, email, password) {
     email,
     displayName: name,
     phone: '',
-    role: email === 'admin@gmail.com' ? 'admin' : 'user',
+    role: email === ADMIN_EMAIL ? 'admin' : 'user',
     createdAt: serverTimestamp()
   });
   return cred.user;
